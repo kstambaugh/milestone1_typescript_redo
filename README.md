@@ -26,10 +26,10 @@ MVP Criteria
     Track player inventory
     Only open doors with correct Key
     Proper Object collision logic
-    Randomize key locations
 
 Post-MVP Plans
 
+    Randomize key locations
     Add pop up instances with puzzles in order to retrieve key
     Add enemies, eventually add combat system
     
