@@ -1,14 +1,13 @@
-const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d');
+const startButton = document.getElementById('startButton')
 
-const component = (width, height, color, x, y) => {
-    this.width = width;
-    this.height = height;
-    this.x = x;
-    this.y = y;
-    ctx.fillStyle = color
-    ctx.fillRect(this.x, this.y, this.width, this.height)
+const loadGame = () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const screenDiv = document.getElementById('screen-div');
+    screenDiv.append(canvas)
+    ctx.fillStyle = 'green'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    startButton.style.display = 'none'
 }
 
-component(10, 10, 'green', 20, 140)
-
+startButton.addEventListener('click', loadGame)
