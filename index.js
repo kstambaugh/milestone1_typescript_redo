@@ -1,16 +1,63 @@
+const canvas = document.getElementById('canvas');
+const c = canvas.getContext('2d');
+
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+class Player {
+    constructor() {
+        this.position = {
+            x: 100,
+            y: 100
+        }
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
+        this.width = 30
+        this.height = 30
+    }
+    draw() {
+        c.fillStyle = 'green'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height
+        )
+    }
+    update() {
+        this.draw()
+        this.position.y += this.velocity.y
 
 
-// const startButton = document.getElementById('startButton')
+    }
+}
 
-// const loadGame = () => {
-//     const canvas = document.createElement('canvas');
-//     const ctx = canvas.getContext('2d');
-//     const screenDiv = document.getElementById('screen-div');
-//     screenDiv.append(canvas)
-//     ctx.fillStyle = 'green'
-//     ctx.fillRect(0, 0, canvas.width, canvas.height)
-//     startButton.style.display = 'none'
-// }
+const player = new Player()
+player.update()
 
-// startButton.addEventListener('click', loadGame)
+//loops the animation frame to allow continuous changes to object states
+function animate() {
+    requestAnimationFrame(animate)
+    c.clearRect(0, 0, canvas.width, canvas.height)
+    player.update()
+}
 
+animate()
+
+
+//event listeners for keyboard
+
+addEventListener('keydown', ({ key }) => {
+    switch (key) {
+        case 'w':
+            console.log('up')
+            break;
+        case 'a':
+            console.log('left')
+            break;
+        case 's':
+            console.log('down')
+            break;
+        case 'd':
+            console.log('right')
+            break;
+    }
+})
