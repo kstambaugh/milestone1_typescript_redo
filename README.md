@@ -26,6 +26,7 @@ MVP Criteria
     Track player inventory
     Only open doors with correct Key
     Proper Object collision logic
+    Game ends when timer expires or timer stops when player wins
 
 Post-MVP Plans
 
