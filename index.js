@@ -4,9 +4,6 @@ const c = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-// find total space player is occupying
-// player.position.x to player.position.x + player.width by player.position.y to player.position.y player.height
-
 
 class Player {
     constructor() {
@@ -183,14 +180,14 @@ function animate() {
 
 animate()
 
-//this event listener will return true if you click on the player entity within canvas
+//this event listener will log true if you click on the player entity within canvas
 
 addEventListener('click', (event) => {
     let mouseX = event.x
     let mouseY = event.y
     if (mouseX >= player.position.x && mouseX <= player.position.x + player.width &&
         mouseY >= player.position.y && mouseY <= player.position.y + player.height)
-        (console.log('true'))
+        console.log('true')
     else console.log('false')
 })
 
