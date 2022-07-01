@@ -22,9 +22,9 @@ class Player {
         this.height = 15
         this.speed = 4
         this.doorKeys = {
-            heart: false,
+            heart: true,
             club: false,
-            diamond: false,
+            diamond: true,
             spade: false,
         }
     }
@@ -63,6 +63,36 @@ class Door {
         this.width = 35;
         this.height = 35;
         this.doorName = doorName
+    }
+    hasProperKey() {
+        let currentDoor = this.doorName
+        log(currentDoor)
+        for (let [key, value] of Object.entries(player.doorKeys)) {
+            if (currentDoor === key) {
+                switch (key) {
+                    case 'heart':
+                        if (player.doorKeys.heart == true) {
+                            log('has key')
+                        } else log('no entry')
+                        break;
+                    case 'club':
+                        if (player.doorKeys.club == true) {
+                            log('has key')
+                        } else log('no entry')
+                        break;
+                    case 'diamond':
+                        if (player.doorKeys.diamond == true) {
+                            log('has key')
+                        } else log('no entry')
+                        break
+                    case 'spade':
+                        if (player.doorKeys.spade == true) {
+                            log('has key')
+                        } else log('no entry')
+                        break;
+                }
+            }
+        }
     }
     draw() {
         c.fillStyle = 'red'
@@ -204,22 +234,7 @@ function animate() {
     }
 }
 
-const hasProperKey = () => {
-    doors.forEach((door) => {
-        let currentDoor = door.doorName
-        for (const [key, value] of Object.entries(player.doorKeys)) {
-            if (currentDoor = key) {
-                value = true
-            }
-        }
 
-    })
-
-}
-
-
-
-hasProperKey()
 
 
 animate()
