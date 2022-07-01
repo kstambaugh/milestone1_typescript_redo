@@ -66,7 +66,6 @@ class Door {
     }
     hasProperKey() {
         let currentDoor = this.doorName
-        log(currentDoor)
         for (let [key, value] of Object.entries(player.doorKeys)) {
             if (currentDoor === key) {
                 switch (key) {
@@ -93,6 +92,15 @@ class Door {
                 }
             }
         }
+    }
+    openDoor() {
+        c.fillStyle = 'white'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    }
+    doorLocked() {
+        c.fillStyle = 'black'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+
     }
     draw() {
         c.fillStyle = 'red'
@@ -206,8 +214,9 @@ function animate() {
             if (!door.hasProperKey()) {
                 player.velocity.x = 0
                 player.velocity.y = 0
+                door.doorLocked()
 
-            }
+            } else door.openDoor()
         }
 
 
