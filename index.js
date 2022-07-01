@@ -72,22 +72,22 @@ class Door {
                 switch (key) {
                     case 'heart':
                         if (player.doorKeys.heart == true) {
-                            log('has key')
+                            return true
                         } else log('no entry')
                         break;
                     case 'club':
                         if (player.doorKeys.club == true) {
-                            log('has key')
+                            return true
                         } else log('no entry')
                         break;
                     case 'diamond':
                         if (player.doorKeys.diamond == true) {
-                            log('has key')
+                            return true
                         } else log('no entry')
                         break
                     case 'spade':
                         if (player.doorKeys.spade == true) {
-                            log('has key')
+                            return true
                         } else log('no entry')
                         break;
                 }
@@ -202,17 +202,15 @@ function animate() {
             player.position.y + player.velocity.y + player.height >= door.position.y &&
             player.position.x + player.velocity.x + player.width >= door.position.x &&
             player.position.x + player.velocity.x <= door.position.x + door.width
-            && player.heart.valueOf(true)
-        ) { console.log('has key') }
-        else if (player.position.y + player.velocity.y <= door.position.y + door.height &&
-            player.position.y + player.velocity.y + player.height >= door.position.y &&
-            player.position.x + player.velocity.x + player.width >= door.position.x &&
-            player.position.x + player.velocity.x <= door.position.x + door.width) {
-            {
+        ) {
+            if (!door.hasProperKey()) {
                 player.velocity.x = 0
                 player.velocity.y = 0
+
             }
         }
+
+
     })
 
     player.update()
