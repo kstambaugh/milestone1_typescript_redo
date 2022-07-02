@@ -1,5 +1,7 @@
 const log = console.log
+const table = console.table
 
+const inventory = document.getElementById('inventory')
 
 const canvas = document.getElementById('canvas');
 const c = canvas.getContext('2d');
@@ -22,9 +24,9 @@ class Player {
         this.height = 15
         this.speed = 4
         this.doorKeys = {
-            heart: true,
+            heart: false,
             club: false,
-            diamond: true,
+            diamond: false,
             spade: false,
         }
     }
@@ -39,6 +41,34 @@ class Player {
     }
 }
 
+class Key {
+    constructor({ position, srcImg, keyShape }) {
+        this.position = position;
+        this.width = 15;
+        this.height = 15;
+        this.srcImg = srcImg
+        this.keyShape = keyShape
+    }
+    addToInventory() {
+        //updates inventory with picture from asset folder
+        let thisImage = 'assets/' + this.keyShape + '.png'
+        let imgTag = document.createElement('img')
+        imgTag.setAttribute('src', thisImage)
+        imgTag.setAttribute('alt', this.keyShape)
+        document.getElementById('inventory').append(imgTag);
+    }
+    //change player.doorKeys.(this key) to true
+    giveGive() {
+        player.doorKeys[this.keyShape] = true
+    }
+    draw() {
+        c.fillStyle = 'purple'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    }
+    update() {
+        this.draw()
+    }
+}
 
 class Boundry {
     static width = 35
@@ -66,32 +96,8 @@ class Door {
     }
     hasProperKey() {
         let currentDoor = this.doorName
-        for (let [key, value] of Object.entries(player.doorKeys)) {
-            if (currentDoor === key) {
-                switch (key) {
-                    case 'heart':
-                        if (player.doorKeys.heart == true) {
-                            return true
-                        } else log('no entry')
-                        break;
-                    case 'club':
-                        if (player.doorKeys.club == true) {
-                            return true
-                        } else log('no entry')
-                        break;
-                    case 'diamond':
-                        if (player.doorKeys.diamond == true) {
-                            return true
-                        } else log('no entry')
-                        break
-                    case 'spade':
-                        if (player.doorKeys.spade == true) {
-                            return true
-                        } else log('no entry')
-                        break;
-                }
-            }
-        }
+        return player.doorKeys[currentDoor] || console.log('no entry')
+
     }
     openDoor() {
         c.fillStyle = 'white'
@@ -117,7 +123,7 @@ const map = [
     ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', '-', '*', '-', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '*', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-',],
-    ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-',],
+    ['-', ' ', ' ', '-', 'k', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', 'k', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
@@ -131,14 +137,17 @@ const map = [
     ['-', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '*', '-', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', '*', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
-    ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
-    ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
+    ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', 'k', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
+    ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', 'k', '-', ' ', ' ', ' ', ' ', ' ', '-',],
     ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',]
 ]
 const boundries = []
 const doors = []
+const hiddenkeys = []
 let padLock = 0
+let playersKeys = 0
 const lock = ['heart', 'club', 'diamond', 'spade']
+
 
 
 
@@ -166,6 +175,17 @@ map.forEach((row, i) => {
                         doorName: lock[padLock - 1]
                     }))
                 break;
+            case 'k':
+                playersKeys++
+                hiddenkeys.push(
+                    new Key({
+                        position: {
+                            x: Boundry.width * j + Boundry.width / 2,
+                            y: Boundry.height * i + Boundry.height / 2,
+                        },
+                        keyShape: lock[playersKeys - 1]
+                    })
+                )
         }
     })
 })
@@ -188,7 +208,7 @@ const keys = {
 }
 
 let lastKey = ''
-
+log(player.doorKeys.heart)
 //loops the animation frame to allow continuous changes to object states
 function animate() {
     requestAnimationFrame(animate)
@@ -215,12 +235,24 @@ function animate() {
                 player.velocity.x = 0
                 player.velocity.y = 0
                 door.doorLocked()
-
             } else door.openDoor()
         }
+    })
 
+    hiddenkeys.forEach(hiddenkey => {
+        hiddenkey.draw()
+        if (player.position.y + player.velocity.y <= hiddenkey.position.y + hiddenkey.height &&
+            player.position.y + player.velocity.y + player.height >= hiddenkey.position.y &&
+            player.position.x + player.velocity.x + player.width >= hiddenkey.position.x &&
+            player.position.x + player.velocity.x <= hiddenkey.position.x + hiddenkey.width
+        ) {
+            hiddenkey.addToInventory()
+            hiddenkeys.slice(hiddenkey)
+
+        }
 
     })
+
 
     player.update()
     player.velocity.x = 0
@@ -239,9 +271,8 @@ function animate() {
     } else {
         player.velocity.x = 0, player.velocity.y = 0
     }
+
 }
-
-
 
 
 animate()

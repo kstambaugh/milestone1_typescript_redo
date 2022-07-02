@@ -17,3 +17,7 @@ canvas {
     margin: auto;
     border: 5px black solid;
 }
+
+img {
+    width: 50px;
+}
