@@ -58,7 +58,7 @@ class Key {
         document.getElementById('inventory').append(imgTag);
     }
     //change player.doorKeys.(this key) to true
-    giveGive() {
+    giveKey() {
         player.doorKeys[this.keyShape] = true
     }
     draw() {
@@ -123,7 +123,7 @@ const map = [
     ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', '-', '*', '-', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '*', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-',],
-    ['-', ' ', ' ', '-', 'k', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', 'k', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-',],
+    ['-', 'k', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', 'k', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
@@ -146,8 +146,8 @@ const doors = []
 const hiddenkeys = []
 let padLock = 0
 let playersKeys = 0
-const lock = ['heart', 'club', 'diamond', 'spade']
-
+const lock = ['heart', 'diamond', 'club', 'spade']
+const myKeys = ['heart', 'diamond', 'spade', 'club']
 
 
 
@@ -183,12 +183,14 @@ map.forEach((row, i) => {
                             x: Boundry.width * j + Boundry.width / 2,
                             y: Boundry.height * i + Boundry.height / 2,
                         },
-                        keyShape: lock[playersKeys - 1]
+                        keyShape: myKeys[playersKeys - 1]
                     })
                 )
         }
     })
 })
+
+
 
 
 const player = new Player()
@@ -208,7 +210,7 @@ const keys = {
 }
 
 let lastKey = ''
-log(player.doorKeys.heart)
+
 //loops the animation frame to allow continuous changes to object states
 function animate() {
     requestAnimationFrame(animate)
@@ -235,11 +237,13 @@ function animate() {
                 player.velocity.x = 0
                 player.velocity.y = 0
                 door.doorLocked()
+                log(player.doorKeys)
             } else door.openDoor()
+            log(player.doorKeys)
         }
     })
 
-    hiddenkeys.forEach(hiddenkey => {
+    hiddenkeys.forEach((hiddenkey, i) => {
         hiddenkey.draw()
         if (player.position.y + player.velocity.y <= hiddenkey.position.y + hiddenkey.height &&
             player.position.y + player.velocity.y + player.height >= hiddenkey.position.y &&
@@ -247,8 +251,8 @@ function animate() {
             player.position.x + player.velocity.x <= hiddenkey.position.x + hiddenkey.width
         ) {
             hiddenkey.addToInventory()
-            hiddenkeys.slice(hiddenkey)
-
+            hiddenkey.giveKey()
+            hiddenkeys.splice(i, 1)
         }
 
     })
@@ -273,7 +277,6 @@ function animate() {
     }
 
 }
-
 
 animate()
 
