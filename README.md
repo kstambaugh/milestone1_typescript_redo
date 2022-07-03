@@ -34,3 +34,5 @@ Post-MVP Plans
     Add pop up instances with puzzles in order to retrieve key
     Add enemies, eventually add combat system
     
+
+Play Lost In The Labyrinth here [https://kstambaugh.github.io/odu_milestone_project1/]
