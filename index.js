@@ -2,6 +2,13 @@ const log = console.log
 const table = console.table
 
 
+
+const cleanHTML = () => {
+    //this function will remove all the divs within the body tag prior to new divs being created dynamicly
+
+}
+
+
 //functions that dynamically modify my page to keep everything on one index.html
 const loadGame = () => {
     newDiv = document.createElement('div')
@@ -12,6 +19,7 @@ const loadGame = () => {
 
     makeCanvas = document.createElement('canvas');
     makeCanvas.setAttribute('id', 'canvas');
+
 
     makeTimer = document.createElement('div');
     makeTimer.setAttribute('id', 'timer')
@@ -48,19 +56,13 @@ const gameEnd = (playerOutcome) => {
     startAgain.setAttribute('id', 'startAgain')
     startAgain.innerHTML = 'Try Again?'
     banner.append(startAgain)
-    banner.addEventListener('click', loadGame)
+    banner.addEventListener('click', newGame)
 }
 
-// gameEnd('loser')
 
-loadGame()
 
-const inventory = document.getElementById('inventory')
-const canvas = document.getElementById('canvas');
-const c = canvas.getContext('2d');
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+const inventory = document.getElementById('inventory');
 
 
 
@@ -284,6 +286,7 @@ let myTimer = (() => {
             } else {
                 clearInterval(countDown)
                 document.getElementById('time-left').innerText = 'GAME OVER'
+                gameEnd('loser')
             }
         }, 1000)
         return excecuteTimer = true
@@ -365,6 +368,7 @@ function animate() {
             document.getElementById('time-left').innerText = 'YOU WIN'
             let game = document.getElementById('labyrinthStart')
             game.parentNode.removeChild(game)
+            gameEnd('winner')
 
 
         }
@@ -390,10 +394,34 @@ function animate() {
 
 }
 
+const newGame = () => {
+    loadGame()
+    const canvas = document.getElementById('canvas');
+    const c = canvas.getContext('2d');
+    canvas.width = innerWidth
+    canvas.height = innerHeight
+    animate()
+}
 
-//calling my animate loop
-animate()
+const StartPage = () => {
+    let welcome = document.createElement('div');
+    welcome.setAttribute('id', 'welcome');
+    welcome.innerHTML = 'Welcome to The Labyrinth'
+    document.body.append(welcome)
+    let beginGame = document.createElement('button');
+    beginGame.setAttribute('id', 'startbutton')
+    beginGame.innerHTML = 'Ready to Escape?'
+    welcome.append(beginGame)
+    welcome.addEventListener('click', log('clicked'))
 
+    // () => {
+    //     let clean = document.getElementById('welcome')
+    //     body.removeChild(clean)
+    //     newGame()
+    // })
+
+}
+StartPage()
 
 //this event listener will log true if you click on the player entity within canvas
 addEventListener('click', (event) => {
