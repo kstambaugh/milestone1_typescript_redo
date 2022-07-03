@@ -1,13 +1,56 @@
 const log = console.log
 const table = console.table
 
-const inventory = document.getElementById('inventory')
+const loadGame = () => {
+    //create each required div for the inventory, timer, and canvas
+    newDiv = document.createElement('div')
+    newDiv.setAttribute('id', 'labyrinthStart');
 
+    makeInventory = document.createElement('div');
+    makeInventory.setAttribute('id', 'inventory');
+
+    makeCanvas = document.createElement('canvas');
+    makeCanvas.setAttribute('id', 'canvas');
+
+    makeTimer = document.createElement('div');
+    makeTimer.setAttribute('id', 'timer')
+
+    timerLable = document.createElement('span');
+    timerLable.setAttribute('id', 'timer-label')
+    timerLable.innerText = 'TIME REMAINING:'
+
+    setTime = document.createElement('span');
+    setTime.setAttribute('id', 'time-left')
+    //add the created elements to the dom
+
+    document.body.append(newDiv);
+    newDiv.append(makeInventory);
+    newDiv.append(makeTimer)
+    makeTimer.append(timerLable, setTime)
+    newDiv.append(makeCanvas)
+}
+loadGame()
+
+// let timeRemaining = 60
+
+// let countDown = setInterval(() => {
+//     if (timeRemaining <= 0) {
+//         log('game end')
+//         clearInterval(countDown);
+//     }
+//     document.getElementById('setTime').value = timeRemaining
+//     timeRemaining -= 1;
+// }, 1000)
+
+
+const inventory = document.getElementById('inventory')
 const canvas = document.getElementById('canvas');
 const c = canvas.getContext('2d');
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
+
+
 
 
 class Player {
@@ -117,6 +160,24 @@ class Door {
     }
 }
 
+class FinishLine {
+    constructor({ position }) {
+        this.position = position;
+        this.width = 32;
+        this.height = 32;
+    }
+    gameWin() {
+
+    }
+    draw() {
+        c.fillStyle = 'orange'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    }
+    update() {
+        this.draw()
+    }
+}
+
 const map = [
     ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',],
     ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-',],
@@ -135,15 +196,16 @@ const map = [
     ['-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
     ['-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
     ['-', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '*', '-', '-',],
-    ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
-    ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', '*', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
-    ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', 'k', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-',],
-    ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', 'k', '-', ' ', ' ', ' ', ' ', ' ', '-',],
+    ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', 'f', 'f', 'f', 'f', 'f', '-',],
+    ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', '*', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', 'f', 'f', 'f', 'f', 'f', '-',],
+    ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', 'k', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', 'f', 'f', 'f', 'f', 'f', '-',],
+    ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', 'k', '-', 'f', 'f', 'f', 'f', 'f', '-',],
     ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',]
 ]
 const boundries = []
 const doors = []
 const hiddenkeys = []
+const finisharea = []
 let padLock = 0
 let playersKeys = 0
 const lock = ['heart', 'diamond', 'club', 'spade']
@@ -184,8 +246,17 @@ map.forEach((row, i) => {
                             y: Boundry.height * i + Boundry.height / 2,
                         },
                         keyShape: myKeys[playersKeys - 1]
-                    })
-                )
+                    }))
+                break;
+            case 'f':
+                finisharea.push(
+                    new FinishLine({
+                        position: {
+                            x: Boundry.width * j,
+                            y: Boundry.height * i,
+                        }
+                    }))
+                break;
         }
     })
 })
@@ -237,9 +308,7 @@ function animate() {
                 player.velocity.x = 0
                 player.velocity.y = 0
                 door.doorLocked()
-                log(player.doorKeys)
             } else door.openDoor()
-            log(player.doorKeys)
         }
     })
 
@@ -255,6 +324,17 @@ function animate() {
             hiddenkeys.splice(i, 1)
         }
 
+    })
+    finisharea.forEach(block => {
+        block.draw()
+        if (player.position.y + player.velocity.y <= block.position.y + block.height &&
+            player.position.y + player.velocity.y + player.height >= block.position.y &&
+            player.position.x + player.velocity.x + player.width >= block.position.x &&
+            player.position.x + player.velocity.x <= block.position.x + block.width
+        ) {
+            //you win function
+            log('you win')
+        }
     })
 
 
