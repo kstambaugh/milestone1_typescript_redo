@@ -20,7 +20,8 @@ const loadGame = () => {
     timerLable.innerText = 'TIME REMAINING:'
 
     setTime = document.createElement('span');
-    setTime.setAttribute('id', 'time-left')
+    setTime.setAttribute('id', 'time-left');
+    setTime.innerText = '00'
     //add the created elements to the dom
 
     document.body.append(newDiv);
@@ -31,25 +32,12 @@ const loadGame = () => {
 }
 loadGame()
 
-// let timeRemaining = 60
-
-// let countDown = setInterval(() => {
-//     if (timeRemaining <= 0) {
-//         log('game end')
-//         clearInterval(countDown);
-//     }
-//     document.getElementById('setTime').value = timeRemaining
-//     timeRemaining -= 1;
-// }, 1000)
-
-
 const inventory = document.getElementById('inventory')
 const canvas = document.getElementById('canvas');
 const c = canvas.getContext('2d');
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-
 
 
 
@@ -261,8 +249,24 @@ map.forEach((row, i) => {
     })
 })
 
+timeRemaining = 60
+let excecuteTimer = false;
+let myTimer = (() => {
+    if (!excecuteTimer) {
+        let countDown = setInterval(() => {
+            if (timeRemaining - 1 >= 0) {
+                timeRemaining--
+                document.getElementById('time-left').innerText = timeRemaining
+                log(timeRemaining)
+            } else {
+                clearInterval(countDown)
+                document.getElementById('time-left').innerText = 'GAME OVER'
+            }
+        }, 1000)
+        return excecuteTimer = true
+    }
 
-
+})
 
 const player = new Player()
 const keys = {
@@ -343,7 +347,6 @@ function animate() {
     player.velocity.y = 0
 
 
-
     if (keys.right.pressed && lastKey === 'd') {
         player.velocity.x = player.speed;
     } else if (keys.left.pressed && lastKey === 'a') {
@@ -358,10 +361,12 @@ function animate() {
 
 }
 
+
+//calling my animate loop
 animate()
 
-//this event listener will log true if you click on the player entity within canvas
 
+//this event listener will log true if you click on the player entity within canvas
 addEventListener('click', (event) => {
     let mouseX = event.x
     let mouseY = event.y
@@ -373,6 +378,7 @@ addEventListener('click', (event) => {
 
 //event listeners for keyboard
 addEventListener('keydown', ({ key }) => {
+    myTimer()
     switch (key) {
         case 'w':
             keys.up.pressed = true;
