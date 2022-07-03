@@ -1,8 +1,9 @@
 const log = console.log
 const table = console.table
 
+
+//functions that dynamically modify my page to keep everything on one index.html
 const loadGame = () => {
-    //create each required div for the inventory, timer, and canvas
     newDiv = document.createElement('div')
     newDiv.setAttribute('id', 'labyrinthStart');
 
@@ -22,7 +23,7 @@ const loadGame = () => {
     setTime = document.createElement('span');
     setTime.setAttribute('id', 'time-left');
     setTime.innerText = '00'
-    //add the created elements to the dom
+
 
     document.body.append(newDiv);
     newDiv.append(makeInventory);
@@ -30,6 +31,28 @@ const loadGame = () => {
     makeTimer.append(timerLable, setTime)
     newDiv.append(makeCanvas)
 }
+
+const gameEnd = (playerOutcome) => {
+    let banner = document.createElement('div');
+    banner.setAttribute('id', 'gameEnd');
+    switch (playerOutcome) {
+        case 'winner':
+            banner.innerText = 'YOU HAVE ESCAPED THE LABYRINTH!'
+            break;
+        case 'loser':
+            banner.innerText = 'YOU HAVE FAILED TO ESCAPE!'
+            break
+    }
+    document.body.append(banner)
+    let startAgain = document.createElement('button');
+    startAgain.setAttribute('id', 'startAgain')
+    startAgain.innerHTML = 'Try Again?'
+    banner.append(startAgain)
+    banner.addEventListener('click', loadGame)
+}
+
+// gameEnd('loser')
+
 loadGame()
 
 const inventory = document.getElementById('inventory')
@@ -268,6 +291,7 @@ let myTimer = (() => {
 
 })
 
+
 const player = new Player()
 const keys = {
     right: {
@@ -337,7 +361,12 @@ function animate() {
             player.position.x + player.velocity.x <= block.position.x + block.width
         ) {
             //you win function
-            log('you win')
+            timeRemaining = 00
+            document.getElementById('time-left').innerText = 'YOU WIN'
+            let game = document.getElementById('labyrinthStart')
+            game.parentNode.removeChild(game)
+
+
         }
     })
 
