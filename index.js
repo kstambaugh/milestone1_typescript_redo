@@ -10,31 +10,36 @@ const welcomePage = () => {
     welcome.append(beginGame)
     welcome.addEventListener('click', function () {
         welcome.remove()
-        newGame()
+        return newGame()
+
+
     })
 }
 
 const gameEnd = (playerOutcome) => {
-    document.getElementById('labyrinthStart').remove()
+    let isThere = document.getElementById('labyrinthStart')
+    if (isThere = 'labyrinthStart') {
+        document.getElementById('labyrinthStart').remove()
+    }
     let banner = document.createElement('div');
     banner.setAttribute('id', 'gameEnd');
+    document.body.append(banner);
     if (playerOutcome == 'winner') {
 
         banner.innerText = 'YOU HAVE ESCAPED THE LABYRINTH!'
     } else { banner.innerText = 'YOU HAVE FAILED TO ESCAPE!' }
 
-    document.body.append(banner)
+
     let startAgain = document.createElement('button');
     startAgain.setAttribute('id', 'startAgain')
-    startAgain.innerHTML = 'Try Again?'
     banner.append(startAgain)
+    startAgain.innerHTML = 'Try Again?'
+
     startAgain.addEventListener('click', function () {
-        let newGameScreen = document.createElement('script')
-        newGameScreen.setAttribute('src', 'welcomeScreen.js');
         banner.remove()
-        document.body.append(newGameScreen)
-        welcomePage()
+        return welcomePage()
     })
+
 }
 
 const newGame = () => {
@@ -73,6 +78,7 @@ const newGame = () => {
     //grabs html elements that we just created/ sizes canvas
     const canvas = document.getElementById('canvas');
     const c = canvas.getContext('2d');
+    gameRunning = true
     canvas.width = innerWidth + 55
     canvas.height = innerHeight - 55
     const inventory = document.getElementById('inventory');
@@ -91,7 +97,7 @@ const newGame = () => {
             }
             this.width = 16
             this.height = 16
-            this.speed = 4
+            this.speed = 3.5
             this.doorKeys = {
                 heart: false,
                 club: false,
@@ -205,7 +211,7 @@ const newGame = () => {
         ['-', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', '-', '*', '-', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', '-',],
         ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '*', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-',],
         ['-', ' ', ' ', '-', 'k', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', 'k', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-',],
-        ['-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
+        ['-', 'f', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
         ['-', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
         ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
         ['-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', '-', '-', '-', '-', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-', ' ', ' ', '-',],
@@ -290,7 +296,7 @@ const newGame = () => {
                 } else {
                     clearInterval(countDown)
                     document.getElementById('time-left').innerText = 'GAME OVER';
-                    gameEnd('loser');
+                    return gameEnd('loser');
                 }
             }, 1000)
             return excecuteTimer = true
@@ -351,81 +357,79 @@ const newGame = () => {
         }
     })
     function animate() {
-        requestAnimationFrame(animate)
-        c.clearRect(0, 0, canvas.width, canvas.height)
-        boundries.forEach(boundry => {
-            boundry.draw()
-            if (player.position.y + player.velocity.y <= boundry.position.y + boundry.height &&
-                player.position.y + player.velocity.y + player.height >= boundry.position.y &&
-                player.position.x + player.velocity.x + player.width >= boundry.position.x &&
-                player.position.x + player.velocity.x <= boundry.position.x + boundry.width
-            ) {
-                player.velocity.x = 0
-                player.velocity.y = 0
-            }
-        })
-        doors.forEach(door => {
-            door.draw()
-            if (player.position.y + player.velocity.y <= door.position.y + door.height &&
-                player.position.y + player.velocity.y + player.height >= door.position.y &&
-                player.position.x + player.velocity.x + player.width >= door.position.x &&
-                player.position.x + player.velocity.x <= door.position.x + door.width
-            ) {
-                if (!door.hasProperKey()) {
+        while (gameRunning = true) {
+            requestAnimationFrame(animate)
+            c.clearRect(0, 0, canvas.width, canvas.height)
+            boundries.forEach(boundry => {
+                boundry.draw()
+                if (player.position.y + player.velocity.y <= boundry.position.y + boundry.height &&
+                    player.position.y + player.velocity.y + player.height >= boundry.position.y &&
+                    player.position.x + player.velocity.x + player.width >= boundry.position.x &&
+                    player.position.x + player.velocity.x <= boundry.position.x + boundry.width
+                ) {
                     player.velocity.x = 0
                     player.velocity.y = 0
-                    door.doorLocked()
-                } else door.openDoor()
+                }
+            })
+            doors.forEach(door => {
+                door.draw()
+                if (player.position.y + player.velocity.y / 2 <= door.position.y + door.height &&
+                    player.position.y + player.velocity.y / 2 + player.height >= door.position.y &&
+                    player.position.x + player.velocity.x / 2 + player.width >= door.position.x &&
+                    player.position.x + player.velocity.x / 2 <= door.position.x + door.width
+                ) {
+                    if (!door.hasProperKey()) {
+                        player.velocity.x = 0
+                        player.velocity.y = 0
+                        door.doorLocked()
+                    } else door.openDoor()
+                }
+            })
+
+            hiddenkeys.forEach((hiddenkey, i) => {
+                hiddenkey.draw()
+                if (player.position.y + player.velocity.y <= hiddenkey.position.y + hiddenkey.height &&
+                    player.position.y + player.velocity.y + player.height >= hiddenkey.position.y &&
+                    player.position.x + player.velocity.x + player.width >= hiddenkey.position.x &&
+                    player.position.x + player.velocity.x <= hiddenkey.position.x + hiddenkey.width
+                ) {
+                    hiddenkey.addToInventory()
+                    hiddenkey.giveKey()
+                    hiddenkeys.splice(i, 1)
+                }
+
+            })
+            finisharea.forEach(block => {
+                block.draw()
+                if (player.position.y + player.velocity.y <= block.position.y + block.height &&
+                    player.position.y + player.velocity.y + player.height >= block.position.y &&
+                    player.position.x + player.velocity.x + player.width >= block.position.x &&
+                    player.position.x + player.velocity.x <= block.position.x + block.width
+                ) {
+                    return gameEnd('winner')
+
+
+
+                }
+            })
+
+
+            player.update()
+            player.velocity.x = 0
+            player.velocity.y = 0
+
+
+            if (keys.right.pressed && lastKey === 'd') {
+                player.velocity.x = player.speed;
+            } else if (keys.left.pressed && lastKey === 'a') {
+                player.velocity.x = -player.speed;
+            } else if (keys.up.pressed && lastKey === 'w') {
+                player.velocity.y = -player.speed;
+            } else if (keys.down.pressed && lastKey === 's') {
+                player.velocity.y = player.speed;
+            } else {
+                player.velocity.x = 0, player.velocity.y = 0
             }
-        })
-
-        hiddenkeys.forEach((hiddenkey, i) => {
-            hiddenkey.draw()
-            if (player.position.y + player.velocity.y <= hiddenkey.position.y + hiddenkey.height &&
-                player.position.y + player.velocity.y + player.height >= hiddenkey.position.y &&
-                player.position.x + player.velocity.x + player.width >= hiddenkey.position.x &&
-                player.position.x + player.velocity.x <= hiddenkey.position.x + hiddenkey.width
-            ) {
-                hiddenkey.addToInventory()
-                hiddenkey.giveKey()
-                hiddenkeys.splice(i, 1)
-            }
-
-        })
-        finisharea.forEach(block => {
-            block.draw()
-            if (player.position.y + player.velocity.y <= block.position.y + block.height &&
-                player.position.y + player.velocity.y + player.height >= block.position.y &&
-                player.position.x + player.velocity.x + player.width >= block.position.x &&
-                player.position.x + player.velocity.x <= block.position.x + block.width
-            ) {
-                //you win function
-                timeRemaining = 00
-                document.getElementById('time-left').innerText = 'YOU WIN'
-                let game = document.getElementById('labyrinthStart')
-                game.parentNode.removeChild(game)
-                gameEnd('winner')
-
-
-            }
-        })
-
-
-        player.update()
-        player.velocity.x = 0
-        player.velocity.y = 0
-
-
-        if (keys.right.pressed && lastKey === 'd') {
-            player.velocity.x = player.speed;
-        } else if (keys.left.pressed && lastKey === 'a') {
-            player.velocity.x = -player.speed;
-        } else if (keys.up.pressed && lastKey === 'w') {
-            player.velocity.y = -player.speed;
-        } else if (keys.down.pressed && lastKey === 's') {
-            player.velocity.y = player.speed;
-        } else {
-            player.velocity.x = 0, player.velocity.y = 0
         }
     }
     animate()
