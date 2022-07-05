@@ -41,8 +41,8 @@ img {
 
 canvas {
     height: 75vh;
-    width: 1750;
-    margin: auto;
+    width: 1780;
+    margin: 5%;
     border: 1px black solid;
 
 }
