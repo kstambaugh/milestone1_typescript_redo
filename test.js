@@ -273,7 +273,7 @@ map.forEach((row, i) => {
     })
 })
 
-timeRemaining = 5
+timeRemaining = 60
 let excecuteTimer = false;
 let myTimer = (() => {
     if (!excecuteTimer) {
